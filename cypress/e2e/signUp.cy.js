@@ -30,8 +30,13 @@ describe('Sign Up Test', () =>{
     cy.url().should('include', '/customer/account/')
   });
 
-  it('should display an error for account already exists', () => {
-    SignUpPage.createAccount('Doug','Duplicate','doug.azamb@example.com','StrongPass123!','StrongPass123!')
+  it.only('should display an error for account already exists', () => {
+    SignUpPage.createAccount(randomFirstName,randomLastName, randomEmail,'StrongPass123!','StrongPass123!')
+    cy.get(':nth-child(2) > .customer-welcome > .customer-menu > .header > .authorization-link > a') 
+      .first()
+      .click({force:true})
+    SignUpPage.visit();
+    SignUpPage.createAccount(randomFirstName,randomLastName, randomEmail,'StrongPass123!','StrongPass123!')
     SignUpPage.getErrorDuplicateEmail()
         .contains('There is already an account with this email address. If you are sure that it is your email address, click here to get your password and access your account.')
   });

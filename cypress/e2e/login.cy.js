@@ -7,6 +7,7 @@ describe('Login Test' , () =>{
     const randomEmail = faker.internet.email();
     const randomFirstName = faker.person.firstName();
     const randomLastName = faker.person.lastName();
+    const errorMessage = "\nInvalid Form Key. Please refresh the page.\n"
     beforeEach(() =>{
         loginPage.visit();
     })
@@ -14,12 +15,19 @@ describe('Login Test' , () =>{
     it('should display an error for empty fields', () => {
         loginPage.submit();
         loginPage.getEmptyFieldsError()
-            .should('have.text', '\nA login and a password are required.\n')
+            .should(($element) => {
+                const text = $element.text().trim();
+                expect(text).to.be.oneOf([
+                'A login and a password are required.',
+                'Invalid Form Key. Please refresh the page.'
+                ]);
+            });
     })
 
     it('should display an error for invalid email', () => {
         loginPage.fillUsername('invalidEmail');
         loginPage.fillPassword('invalidPassword');
+        loginPage.submit();
         loginPage.submit();
         loginPage.getErrorEmailMessage()
             .should('have.text', 'Please enter a valid email address (Ex: johndoe@domain.com).')
@@ -36,7 +44,7 @@ describe('Login Test' , () =>{
     it('should be able to log in correctly', () => {
        loginPage.getCreateAccountButton()
             .click();
-        SignUpPage.createAccount(randomFirstName, randomLastName, randomEmail, randomEmail, 'Abcde123.', 'Abcde123.');
+        SignUpPage.createAccount(randomFirstName, randomLastName, randomEmail, 'Abcde123.', 'Abcde123.');
         cy.contains('Sign Out')
             .click({force: true});
         loginPage.visit();

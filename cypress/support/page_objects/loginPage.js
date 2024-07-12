@@ -15,7 +15,7 @@ class LoginPage {
 
   submit() {
     cy.get('#send2')
-      .click();
+      .click({force:true});
   }
 
   getEmptyFieldsError() {

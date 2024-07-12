@@ -48,7 +48,7 @@ class SignUpPage {
     submit(){
         cy.get('button[type="submit"]')
             .contains('Create an Account')
-            .click();
+            .click({timeout: 100000});
     }
 
     createAccount(firstName, lastName, email, password, passwordConfirm){
